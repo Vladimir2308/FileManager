@@ -7,35 +7,24 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class MainWindow implements TreeSelectionListener {
-
-    public Box contents;
-    public Box getBoxjlist;
-    TableFilesClass tableFiles;
+    /**MainWindow creat all visible elements*/
+    private TableFilesClass tableFiles;
     private static JPanel errorPanel;
-    Controller controller;
+    private Controller controller;
     private Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
     private Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
     private JFrame frame;
-    TreeClass treeObject;
-    TableList tableSelection;
-    ArrayList<JButton> buttons = new ArrayList<JButton>();
+    private TreeClass treeObject;
+    private TableList tableSelection;
+    private ArrayList<JButton> buttons = new ArrayList<>();
 
-    public void addComponentsToPane(Container pane) {
+    private void addComponentsToPane(Container pane) {
 
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -95,7 +84,6 @@ public class MainWindow implements TreeSelectionListener {
 
         pane.add(treeObject.getTree(), c);
 
-        boolean qq = treeObject.getTree().isFixedRowHeight();
         treeObject.getTree().setMinimumSize(
                 treeObject.getTree().getMaximumSize());
         JScrollPane treeView = new JScrollPane(treeObject.getTree());
@@ -116,7 +104,7 @@ public class MainWindow implements TreeSelectionListener {
 
         tableFiles = new TableFilesClass(treeObject);
 
-        tableFiles.getBox();
+
         pane.add(tableFiles.getBox(), c);
 
         c.anchor = GridBagConstraints.CENTER;
@@ -163,7 +151,7 @@ public class MainWindow implements TreeSelectionListener {
         frame = new JFrame("File Manager");
         Image icon = new ImageIcon("images\\comp.png").getImage();
         frame.setIconImage(icon);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addComponentsToPane(frame.getContentPane());
         frame.pack();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -171,34 +159,25 @@ public class MainWindow implements TreeSelectionListener {
 
     }
 
-    public TableFilesClass getTableFilesClass() {
-        return tableFiles;
-    }
-
-    public TreeClass getTreeObject() {
-        return treeObject;
-    }
-
-    public void setDefaultCursor() {
+    void setDefaultCursor() {
         frame.setCursor(defaultCursor);
     }
 
-    public void setWaitCursor() {
+    void setWaitCursor() {
         frame.setCursor(waitCursor);
     }
 
-    void showThrowable(Throwable t) {
+    private void showThrowable(Throwable t) {
         t.printStackTrace();
         JOptionPane.showMessageDialog(errorPanel, t.toString(), t.getMessage(),
                 JOptionPane.ERROR_MESSAGE);
-        // errorPanel.repaint();
     }
 
     static void showPane(String message) {
 
         errorPanel = new JPanel();
         errorPanel.setOpaque(true);
-        JOptionPane.showMessageDialog(errorPanel, message, "", 1);
+        JOptionPane.showMessageDialog(errorPanel, message, "", JOptionPane.INFORMATION_MESSAGE);
         errorPanel.repaint();
     }
 
@@ -206,56 +185,40 @@ public class MainWindow implements TreeSelectionListener {
         switch (ae.getActionCommand()) {
             case "Новая папка":
                 controller.newDir();
-                return;
+                break;
             case "Копировать":
                 controller.copy();
-                return;
+                break;
             case "Вырезать":
                 controller.cut();
-                return;
+                break;
             case "Вставить":
                 try {
                     controller.insert();
                 } catch (IOException e) {
                     Controller.showPane(" Ошибка " + e.toString());
-
                 }
-                return;
+                break;
             case "Удалить":
                 controller.delete();
-                return;
+                break;
             case "Переименовать":
                 controller.rename();
-                return;
-
+                break;
             case "О программе":
                 controller.about();
-                return;
         }
     }
 
     private void doDelListRow(ActionEvent ae) {
-        System.out.println("ActionEvent ae ");
-        JTable table = (JTable) ae.getSource();
         int modelRow = Integer.valueOf(ae.getActionCommand());
-        System.out.println("Integer.valueOf( ae.getActionCommand() "
-                + Integer.valueOf(ae.getActionCommand()));
-
         controller.delListRow(modelRow);
-    }
-
-    private void clearList(ActionEvent ae) {
-        System.out.println("ActionEvent ae Удалимммм ");
-
     }
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath()
                 .getLastPathComponent();
-
         controller.offButton(treeObject.isSelectedRoot(node));
-
     }
-
 }

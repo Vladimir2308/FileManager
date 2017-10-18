@@ -6,41 +6,38 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-public class StackFileToDelCopy {
-	private int maxSize; // size of stack array
+class StackFileToDelCopy {
 	private File[] stackArray;
 	private int top; // top of stack
 
 
 
-	public StackFileToDelCopy(int s) // constructor
+	StackFileToDelCopy(int maxSize) // constructor
 	{
-		maxSize = s;
 		stackArray = new File[maxSize];
 		top = -1;
 	}
 
 
-	public void push(File p) // put item on top of stack
+	void push(File p) // put item on top of stack
 	{
 		stackArray[++top] = p;
 	}
 
 
-	public File pop() // take item from top of stack
+	File pop() // take item from top of stack
 	{
 		return stackArray[top--];
 	}
 
 
-	public File peek() // peek at top of stack
+	File peek() // peek at top of stack
 	{
 		return stackArray[top];
 	}
 
 
-	public boolean isEmpty() // true if stack is empty
+	boolean isEmpty() // true if stack is empty
 	{
 		return (top == -1);
 	}
@@ -48,22 +45,16 @@ public class StackFileToDelCopy {
 }
 
 class Stack {
-	static int theNumber;
-	static int countfileToDel;
-	static StackFileToDelCopy theStackToDel;
-	static int countfileToCopy;
-	static StackFileToDelCopy theStackToCopy;
 
 
-	public static boolean deleteFiles(File file) {
-		theStackToDel = new StackFileToDelCopy(1000000); // make a stack
+    static boolean deleteFiles(File file) {
+        StackFileToDelCopy theStackToDel = new StackFileToDelCopy(1000000);
 
 		boolean deleteBoolean = true;
 		theStackToDel.push(file);
 		while (!theStackToDel.isEmpty()) {
 			File temp = theStackToDel.peek();
 			if (!temp.isDirectory() || TreeNodeClass.isEmpty(temp)) {
-				System.out.println(temp);
 				if (temp.delete()) {
 					 theStackToDel.pop();
 
@@ -74,8 +65,6 @@ class Stack {
 
 			} else {
 				for (int i = 0; i < temp.listFiles().length; i++) {
-					System.out.println(temp + " i " + i + "  "
-							+ temp.listFiles()[i]);
 					theStackToDel.push(temp.listFiles()[i]);
 
 				}
@@ -87,17 +76,14 @@ class Stack {
 	}
 
 
-	public static boolean copyFiles(File source, File dirToInsert) {
-		theStackToCopy = new StackFileToDelCopy(100000);
+	static void copyFiles(File source, File dirToInsert) {
+        StackFileToDelCopy theStackToCopy = new StackFileToDelCopy(100000);
 		int choiceActionDirAuto = -1;
 		int choiceActionFileAuto = -1;
-		// String paperSource = "";
-		// String paperToInsert = "";
 		boolean cancelCopy = false;
 		boolean cancelDirCopy = false;
-		boolean copySuccessfully = true;
-		Map<File, File> hashMapPathToCopy;
-		hashMapPathToCopy = new HashMap<File, File>();
+        Map<File, File> hashMapPathToCopy;
+		hashMapPathToCopy = new HashMap<>();
 		theStackToCopy.push(source);
 		hashMapPathToCopy.put(source, dirToInsert);
 		while (!theStackToCopy.isEmpty()) {
@@ -105,12 +91,10 @@ class Stack {
 			File tempFile = theStackToCopy.pop();
 			dirToInsert = hashMapPathToCopy.get(tempFile);
 			hashMapPathToCopy.remove(tempFile);
-			String tempFileName = tempFile.getName();
+            String tempFileName = tempFile.getName();
 
 			newFile = new File(dirToInsert.getPath() + "\\" + tempFileName);
 
-			System.out.println("tempFile   " + tempFile);
-			System.out.println("newFile " + newFile);
 
 			if (newFile.exists()) {
 				Object[] choice = new Object[2];
@@ -124,7 +108,6 @@ class Stack {
 								"Папка с таким именем уже существует: "
 										+ newFile.getName(), selectionValues);
 						if ((boolean) choice[1]) {
-							System.out.println(" choice " + choice[0]);
 							choiceActionDirAuto = (Integer) choice[0];
 						}
 					}
@@ -136,7 +119,7 @@ class Stack {
 						break;
 					case 1:
 						deleteFiles(newFile);
-						System.out.println(newFile.mkdir());
+						newFile.mkdir();
 						break;
 					case 2:
 						// Save both folder
@@ -166,7 +149,6 @@ class Stack {
 								"Файл с таким именем уже существует:"
 										+ newFile.getName(), selectionValues);
 						if ((boolean) choice[1]) {
-							System.out.println(" choice " + choice[0]);
 							choiceActionFileAuto = (Integer) choice[0];
 						}
 					}
@@ -182,7 +164,6 @@ class Stack {
 						// Save both files
 
 						for (int i = 1; i < 1000; i++) {
-							System.out.println(source.getName());
 
 							newFile = new File(dirToInsert.getPath()
 									+ "\\"
@@ -206,7 +187,7 @@ class Stack {
 					}
 					if (!cancelCopy) {
 						if (!copyFile(tempFile, newFile))
-							copySuccessfully = false;
+                            Controller.showPane("Не удалось скопировать файл!");
 
 						cancelCopy = false;
 					}
@@ -221,7 +202,7 @@ class Stack {
 				} else {
 
 					if (!copyFile(tempFile, newFile))
-						copySuccessfully = false;
+                       Controller.showPane("Не удалось скопировать файл!");
 
 					cancelCopy = false;
 
@@ -242,15 +223,13 @@ class Stack {
 
 			}
 		}
-		System.out.println("copySuccessfully " + copySuccessfully);
-		return copySuccessfully;
 
-	}
+    }
 
-	public static boolean copyFile(File source, File dest) {
+	private static boolean copyFile(File source, File dest) {
 
-		FileInputStream ins = null;
-		FileOutputStream outs = null;
+		FileInputStream ins;
+		FileOutputStream outs;
 		try {
 
 			ins = new FileInputStream(source);
@@ -264,11 +243,10 @@ class Stack {
 			ins.close();
 			outs.flush();
 			outs.close();
-			System.out.println("File copied successfully!!");
 			return true;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			System.out.println(ioe);
+			Controller.showPane(ioe.toString()) ;
 			return false;
 		}
 	}

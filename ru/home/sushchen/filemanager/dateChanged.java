@@ -5,25 +5,29 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 public class dateChanged implements Comparable<dateChanged> {
-	long date;
-	File file;
+    /**
+     * This Class changing information for a sorting in tableFiles
+     * and change representation of date
+     */
+    private long date;
+    File file;
 
-	public dateChanged(File file) {
-		this.file = file;
-		date = file.lastModified();
-	}
+    dateChanged(File file) {
+        this.file = file;
+        date = file.lastModified();
+    }
 
-	public long getDate() {
-		return date;
-	}
+    private long getDate() {
+        return date;
+    }
 
-	public String toString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy   HH:mm");
-		return sdf.format(new Date(date));
-	}
+    public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy   HH:mm");
+        return sdf.format(new Date(date));
+    }
 
-	public int compareTo(dateChanged dC) {
-		return Long.compare(date, dC.getDate());
-	}
+    public int compareTo(dateChanged dC) {
+        return Long.compare(date, dC.getDate());
+    }
 
 }
