@@ -1,6 +1,6 @@
 package ru.home.sushchen.filemanager;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.plaf.ColorUIResource;
 
@@ -19,8 +19,10 @@ public class FileManager {
                 }
             }
         } catch (Exception e) {
-            MainWindow
-                    .showPane("LaF Nimbus is not available, manager will work with default UI");
+
+            JOptionPane.showMessageDialog(null,"LaF Nimbus is not available, manager will work with default UI");
+
+
 
         }
 
