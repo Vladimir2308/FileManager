@@ -30,16 +30,15 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	 * 
 	 */
     private static final long serialVersionUID = 1L;
-    protected JTree tree;
-    Controller controller;
+    private JTree tree;
+    private Controller controller;
     private DefaultTreeModel model;
     private DefaultMutableTreeNode root;
-    public DefaultMutableTreeNode selectedNode;
-    TreePath treePaths;
-    Map<File, DefaultMutableTreeNode> hashMap;
+    private DefaultMutableTreeNode selectedNode;
+    private Map<File, DefaultMutableTreeNode> hashMap;
 
-    public TreeClass() {
-	hashMap = new HashMap<File, DefaultMutableTreeNode>();
+    TreeClass() {
+	hashMap = new HashMap<>();
 
 	root = new DefaultMutableTreeNode("Мой компьютер");
 	hashMap.put(new File("Мой компьютер"), root);
@@ -85,7 +84,7 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	selectedNode = (DefaultMutableTreeNode) e.getPath()
 		.getLastPathComponent();
 
-	treePaths = tree.getSelectionPath();
+        TreePath treePaths = tree.getSelectionPath();
 
 	if (selectedNode == null)
 	    return;
@@ -94,7 +93,7 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 		    .getUserObject();
 
 	    TableFilesClass.getTableModel().ShowContent(selected.file,
-		    treePaths);
+                treePaths);
 
 	} else {
 	    TableFilesClass.getTableModel().showRoot();
@@ -104,11 +103,11 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	controller.setDefaultCursor();
     }
 
-    public void setSelectionPath(TreePath path) {
+    void setSelectionPath(TreePath path) {
 	tree.setSelectionPath(path);
     }
 
-    public void setSelectionParentNode() {
+    void setSelectionParentNode() {
 	DefaultMutableTreeNode selDefMutTreeNode = getSelectedTreeNode();
 	if (selDefMutTreeNode != root) {
 
@@ -119,13 +118,13 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	}
     }
 
-    public void AddNodeSetPath(File file) {
+    void AddNodeSetPath(File file) {
 	/*
 	 * Этот метод необхадим для открытия папки в JTree, корорая была открыта
 	 * двойным щелчком в tableFiles
 	 */
 	controller.setWaitCursor();
-	TreePath pathOld = tree.getSelectionPath();
+		tree.getSelectionPath();
 	System.out.println(tree.getSelectionPath());
 	DefaultMutableTreeNode node;
 	if (!hashMap.containsKey(file)) {
@@ -134,9 +133,8 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	    node = TreeNodeClass.isDir(file) ? new DefaultMutableTreeNode(
 
 	    r, true) : new DefaultMutableTreeNode(r, false);
-	    DefaultMutableTreeNode currentSelected = getSelectedTreeNode();
 
-	    System.out.println("Path : " + node.getPath());
+		System.out.println("Path : " + node.getPath());
 	    model.insertNodeInto(node, getSelectedTreeNode(), 0);
 	    hashMap.put(file, node);
 	} else
@@ -148,11 +146,7 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	controller.setDefaultCursor();
     }
 
-    public Map getHashMap() {
-	return hashMap;
-    }
-
-    public void newDir() {
+	void newDir() {
 	DefaultMutableTreeNode SelectedTreeNode = getSelectedTreeNode();
 	// Получаем выделеннуюнную запись в JTree
 	TreeNodeClass selected = (TreeNodeClass) SelectedTreeNode
@@ -182,7 +176,7 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 
     }
 
-    public void removeNodeFromTree(File file) {
+    void removeNodeFromTree(File file) {
 	DefaultMutableTreeNode nodeDel = hashMap.get(file);
 
 	System.out.println(Arrays.toString(nodeDel.getPath()));
@@ -201,9 +195,9 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 
     }
 
-    public void renameFile(File oldName, File newName) {
+    void renameFile(File oldName, File newName) {
 
-	// model.removeNodeFromParent(arg0);
+
 	DefaultMutableTreeNode renameNode = hashMap.get(oldName);
 	TreeNodeClass treeNodeNewName = new TreeNodeClass(newName);
 	renameNode.setUserObject(treeNodeNewName);
@@ -211,10 +205,10 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 
 	hashMap.put(newName, renameNode);
 	update();
-	// model.insertNodeInto(node , getSelectedTreeNode(), 0);
+
     }
 
-    public void insertHashMap(File file) {
+    void insertHashMap(File file) {
 
 	//
 
@@ -228,15 +222,12 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 
 	    model.insertNodeInto(node, getSelectedTreeNode(), 0);
 	    hashMap.put(file, node);
-	    // System.out.println("Selected In hasmap, file: [Мой компьютер, "+
-	    // file );
-	    // System.out.println("Selected In hasmap, node: "+
-	    // Arrays.toString(node.getPath()));
+
 	}
 
     }
 
-    public void update() {
+    void update() {
 	TreePath path = tree.getSelectionPath();
 	model.reload();
 	tree.expandPath(path);
@@ -292,11 +283,11 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	controller.setDefaultCursor();
     }
 
-    public DefaultMutableTreeNode getSelectedTreeNode() {
+    private DefaultMutableTreeNode getSelectedTreeNode() {
 	return selectedNode;
     }
 
-    public File getSelectedForInsert() {
+    File getSelectedForInsert() {
 	TreeNodeClass selected = (TreeNodeClass) selectedNode.getUserObject();
 	if (!selected.file.isDirectory()) {
 	    DefaultMutableTreeNode SelectedNodeForInsert = (DefaultMutableTreeNode) selectedNode
@@ -306,7 +297,8 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	return selected.file;
     }
 
-    public TreeNodeClass getSelectedTreeNodeClass() {
+
+    TreeNodeClass getSelectedTreeNodeClass() {
 	TreeNodeClass selectedTN;
 	if (selectedNode != root) {
 	    selectedTN = (TreeNodeClass) selectedNode.getUserObject();
@@ -315,22 +307,22 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 	return selectedTN;
     }
 
-    public JTree getTree() {
+    JTree getTree() {
 	return tree;
     }
 
-    public File getSelectedFile() {
+    File getSelectedFile() {
 	if (selectedNode != root)
 	    return ((TreeNodeClass) selectedNode.getUserObject()).file;
 	else
 	    return null;
     }
 
-    public DefaultTreeModel getTreeModel() {
+    private DefaultTreeModel getTreeModel() {
 	return model;
     }
 
-    public boolean isSelectedRoot(DefaultMutableTreeNode Node) {
+    boolean isSelectedRoot(DefaultMutableTreeNode Node) {
 	return (Node == root);
     }
 
@@ -339,15 +331,15 @@ public class TreeClass extends JFrame implements TreeSelectionListener,
 class IconCellRenderer extends DefaultTreeCellRenderer
 
 {
-    protected Color textSelectionColor;
-    protected Color textNonSelectionColor;
-    protected Color bkSelectionColor;
-    protected Color bkNonSelectionColor;
-    protected Color borderSelectionColor;
+    private Color textSelectionColor;
+    private Color textNonSelectionColor;
+    private Color bkSelectionColor;
+    private Color bkNonSelectionColor;
+    private Color borderSelectionColor;
 
-    protected boolean selected;
+    private boolean selected;
 
-    public IconCellRenderer() {
+    IconCellRenderer() {
 	super();
 	textSelectionColor = UIManager.getColor("Tree.selectionForeground");
 	textNonSelectionColor = UIManager.getColor("Tree.textForeground");
@@ -375,7 +367,7 @@ class IconCellRenderer extends DefaultTreeCellRenderer
 
 	    setText(obj.toString());
 
-	    TreeNodeClass idata = (TreeNodeClass) obj;
+	    TreeNodeClass idata = obj;
 
 	    TreePath path = new TreePath(node.getPath());
 	    if (!TreeNodeClass.isDir(obj.file) || (path.getPathCount() == 2))
@@ -384,15 +376,15 @@ class IconCellRenderer extends DefaultTreeCellRenderer
 	    else {
 
 		if (tree.isExpanded(new TreePath(node.getPath())))
-		    icon = new ImageIcon("images\\open.png");
+		    icon = new ImageIcon(getClass().getResource("/images/open.png"));
 		else
-		    icon = new ImageIcon("images\\close.png");
+		    icon = new ImageIcon(getClass().getResource("/images/close.png"));
 		setIcon(icon);
 
 	    }
 
 	} else {
-	    icon = new ImageIcon("images\\comp.png");
+	    icon = new ImageIcon(getClass().getResource("/images/comp.png"));
 	    setIcon(icon);
 	    setText("Мой компьютер");
 	}

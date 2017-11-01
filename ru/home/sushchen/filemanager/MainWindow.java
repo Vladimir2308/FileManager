@@ -1,16 +1,15 @@
 package ru.home.sushchen.filemanager;
 
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 public class MainWindow implements TreeSelectionListener {
     /**MainWindow creat all visible elements*/
@@ -149,7 +148,7 @@ public class MainWindow implements TreeSelectionListener {
     void createAndShowGUI() {
 
         frame = new JFrame("File Manager");
-        Image icon = new ImageIcon("images\\comp.png").getImage();
+        Image icon = new ImageIcon(getClass().getResource("/images/comp.png")).getImage();
         frame.setIconImage(icon);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addComponentsToPane(frame.getContentPane());
@@ -196,7 +195,7 @@ public class MainWindow implements TreeSelectionListener {
                 try {
                     controller.insert();
                 } catch (IOException e) {
-                    Controller.showPane(" Ошибка " + e.toString());
+                    showPane(" Ошибка " + e.toString());
                 }
                 break;
             case "Удалить":

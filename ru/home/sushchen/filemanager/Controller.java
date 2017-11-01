@@ -174,7 +174,7 @@ class Controller {
     }
 
     void about() {
-        String version = "Программа, File Manager v 1.0, выполнена в учебных целях Сущень В.О. версия выпущена 16.10.2017 ";
+        String version = "Программа, File Manager v 1.0, выполнена в учебных целях Сущень В.О. версия выпущена 19.10.2017 ";
         showPane(version);
     }
 

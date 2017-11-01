@@ -19,10 +19,8 @@ public class FileManager {
                 }
             }
         } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(null,"LaF Nimbus is not available, manager will work with default UI");
-
-
+            MainWindow
+                    .showPane("LaF Nimbus is not available, manager will work with default UI");
 
         }
 
